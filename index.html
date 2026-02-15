@@ -1,40 +1,132 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">  
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Starry Nights — Your Name</title>
-  <link rel="stylesheet" href="css/style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Starit 的个人主页：星空背景、项目与联系方式。" />
+
+  <title>Starit · Starry Home</title>
+
+  <!-- Open Graph (optional) -->
+  <meta property="og:title" content="Starit · Starry Home" />
+  <meta property="og:description" content="星空主题个人主页：关于我、项目与联系方式。" />
+  <meta property="og:type" content="website" />
+
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <canvas id="starfield"></canvas>
-  <div class="content">
-    <header>
-      <h1>Your Name</h1>
-      <p>Welcome to my personal website</p>
+  <a class="skip" href="#main">跳到正文</a>
+
+  <canvas id="starfield" aria-hidden="true"></canvas>
+
+  <div class="page">
+    <header class="topbar">
+      <div class="brand">
+        <div class="mark" aria-hidden="true">✦</div>
+        <div class="brandText">
+          <div class="name">Starit</div>
+          <div class="tagline">仰望星空，脚踏实地</div>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="页面导航">
+        <a href="#about">关于</a>
+        <a href="#projects">项目</a>
+        <a href="#contact">联系</a>
+      </nav>
     </header>
-    <main>
-      <section id="about">
-        <h2>About Me</h2>
-        <p>[Your bio goes here]</p>
+
+    <main id="main" class="main">
+      <section class="hero" aria-label="封面">
+        <h1>你好，我是 <span class="accent">Starit</span></h1>
+        <p class="lead">
+          这是一个简洁的星空主题个人主页。你可以在这里放上你的简介、项目链接，以及任何你想分享的内容。
+        </p>
+        <div class="ctaRow">
+          <a class="btn primary" href="#projects">查看项目</a>
+          <a class="btn" href="#contact">联系我</a>
+        </div>
+        <p class="hint">提示：把下面的文字替换成你的真实信息即可。</p>
       </section>
-      <section id="projects">
-        <h2>Projects</h2>
-        <ul>
-          <li><a href="#">Project One</a></li>
-          <li><a href="#">Project Two</a></li>
-        </ul>
+
+      <section id="about" class="panel">
+        <h2>关于我</h2>
+        <div class="grid two">
+          <div class="card">
+            <h3>一句话介绍</h3>
+            <p>
+              我关注 <strong>Web / AI / DeFi</strong> 方向，喜欢把复杂问题拆解成可交付的系统。
+            </p>
+          </div>
+          <div class="card">
+            <h3>正在做什么</h3>
+            <ul class="list">
+              <li>搭建自己的工具链与自动化助手</li>
+              <li>维护一些开源项目与实验性 Demo</li>
+              <li>持续学习：工程化、产品化、可靠性</li>
+            </ul>
+          </div>
+        </div>
       </section>
-      <section id="contact">
-        <h2>Contact</h2>
-        <p>Email: <a href="mailto:you@example.com">you@example.com</a></p>
+
+      <section id="projects" class="panel">
+        <h2>项目</h2>
+        <div class="grid three">
+          <article class="card">
+            <h3>Starry Site</h3>
+            <p>这个星空主页模板本身。简洁、响应式、支持低动态模式。</p>
+            <div class="meta">
+              <a class="link" href="https://github.com/DeFiAlien/website_test" target="_blank" rel="noreferrer">GitHub Repo</a>
+            </div>
+          </article>
+
+          <article class="card">
+            <h3>Project Two</h3>
+            <p>在这里放你的第二个项目：一句话说明它解决什么问题。</p>
+            <div class="meta">
+              <a class="link" href="#" aria-disabled="true">Link</a>
+            </div>
+          </article>
+
+          <article class="card">
+            <h3>Project Three</h3>
+            <p>第三个项目占位。你也可以把这里改成经历、技能栈或博客入口。</p>
+            <div class="meta">
+              <a class="link" href="#" aria-disabled="true">Link</a>
+            </div>
+          </article>
+        </div>
       </section>
+
+      <section id="contact" class="panel">
+        <h2>联系</h2>
+        <div class="grid two">
+          <div class="card">
+            <h3>邮箱</h3>
+            <p>
+              <a class="link" href="mailto:defi_aline@example.com">defi_aline@example.com</a>
+              <span class="muted">（把这个改成你的真实邮箱）</span>
+            </p>
+          </div>
+          <div class="card">
+            <h3>其他</h3>
+            <ul class="list">
+              <li>GitHub：<a class="link" href="https://github.com/DeFiAlien" target="_blank" rel="noreferrer">@DeFiAlien</a></li>
+              <li>Telegram：<span class="muted">@Starit2023</span></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <div>© <span id="year"></span> Starit · Built with HTML/CSS/Canvas</div>
+      </footer>
     </main>
-    <footer>
-      &copy; 2026 Your Name
-    </footer>
   </div>
-  <script src="js/starfield.js"></script>
+
+  <script src="js/starfield.js" defer></script>
+  <script>
+    document.getElementById('year').textContent = String(new Date().getFullYear());
+  </script>
 </body>
 </html>
