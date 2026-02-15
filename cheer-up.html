@@ -5,37 +5,57 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="一个小小的开心页面：呼吸、夸夸、放烟花、抽小卡片。" />
   <title>给 Starit 的开心小宇宙</title>
-  <!-- Intentionally no external fonts for a cleaner, faster, more minimal vibe -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
   <style>
     :root{
-      --bg:#060814;
-      --panel: rgba(18, 22, 40, .62);
-      --border: rgba(255,255,255,.12);
-      --text: rgba(255,255,255,.92);
-      --muted: rgba(255,255,255,.66);
-      --a:#88d7ff;
-      --b:#b7a2ff;
-      --shadow: 0 20px 80px rgba(0,0,0,.45);
+      --paper: #f5f0e8;
+      --paper2: #efe7db;
+      --ink: #181716;
+      --muted: rgba(24,23,22,0.68);
+      --faint: rgba(24,23,22,0.10);
+      --accent: #2a4a7b;
+      --shadow: 0 18px 70px rgba(0,0,0,0.10);
       --r: 18px;
+      --sans: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     }
+
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
       margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      color:var(--text);
-      background: var(--bg);
+      font-family: var(--sans);
+      color: var(--ink);
+      background: radial-gradient(1200px 600px at 20% 0%, var(--paper2), var(--paper));
       overflow-x:hidden;
     }
+
+    /* Grain overlay */
+    .paperGrain{
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -2;
+      opacity: 0.28;
+      background-image:
+        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="340" height="340"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency=".65" numOctaves="2" stitchTiles="stitch"/></filter><rect width="340" height="340" filter="url(%23n)" opacity=".30"/></svg>');
+      mix-blend-mode: multiply;
+    }
+
+    /* FX canvas */
     canvas{position:fixed; inset:0; z-index:-1}
 
     .wrap{width:min(980px, calc(100% - 32px)); margin:24px auto 60px;}
 
     header{
-      border:1px solid var(--border);
+      border:1px solid var(--faint);
       border-radius: var(--r);
-      background: rgba(18,22,40,.42);
-      backdrop-filter: blur(10px);
+      background: rgba(245,240,232,0.65);
+      backdrop-filter: blur(8px);
       box-shadow: var(--shadow);
       padding: 18px 18px;
       display:flex;
@@ -44,68 +64,86 @@
       flex-wrap:wrap;
       align-items:center;
     }
+
     .title{display:flex; gap:12px; align-items:center}
     .spark{
       width:38px; height:38px;
       display:grid; place-items:center;
       border-radius:14px;
-      border:1px solid var(--border);
-      background: radial-gradient(120% 120% at 30% 30%, rgba(136,215,255,.22), rgba(183,162,255,.10), rgba(0,0,0,0));
+      border:1px solid var(--faint);
+      background: rgba(255,255,255,0.35);
+      font-family: var(--mono);
+      color: rgba(24,23,22,0.70);
     }
+
     h1{margin:0; font-size:18px; letter-spacing:.2px}
     .sub{margin:2px 0 0; font-size:12px; color:var(--muted)}
 
     .nav{display:flex; gap:10px; flex-wrap:wrap}
-    .nav a{color:var(--muted); text-decoration:none; border:1px solid transparent; padding:8px 10px; border-radius: 14px}
-    .nav a:hover{color:var(--text); border-color:var(--border); background: rgba(255,255,255,.03)}
+    .nav a{
+      color: var(--muted);
+      text-decoration:none;
+      border:1px solid transparent;
+      padding:8px 10px;
+      border-radius: 999px;
+    }
+    .nav a:hover{color: var(--ink); border-color: var(--faint); background: rgba(255,255,255,0.28)}
 
     .hero{
       margin-top:16px;
-      border:1px solid var(--border);
+      border:1px solid var(--faint);
       border-radius: var(--r);
-      background: linear-gradient(180deg, rgba(18,22,40,.68), rgba(18,22,40,.36));
-      backdrop-filter: blur(10px);
+      background: rgba(245,240,232,0.58);
+      backdrop-filter: blur(8px);
       box-shadow: var(--shadow);
       padding: 28px 20px;
     }
+
     .hero h2{margin:0; font-size: clamp(24px, 4vw, 40px); line-height:1.08}
-    .accent{background: linear-gradient(90deg, var(--a), var(--b)); -webkit-background-clip:text; background-clip:text; color:transparent}
-    .lead{margin:12px 0 0; color:var(--muted); line-height:1.75}
+    .accent{
+      color: var(--ink);
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 6px;
+      text-decoration-color: rgba(42,74,123,0.40);
+    }
+
+    .lead{margin:12px 0 0; color:var(--muted); line-height:1.85}
 
     .grid{display:grid; gap:12px; margin-top: 14px}
     @media (min-width: 860px){ .grid{grid-template-columns: 1fr 1fr} }
 
     .card{
-      border:1px solid rgba(255,255,255,.10);
+      border:1px solid rgba(24,23,22,0.10);
       border-radius: 16px;
-      background: rgba(0,0,0,.18);
+      background: rgba(255,255,255,0.18);
       padding: 14px;
       min-height: 120px;
     }
+
     .card h3{margin:0 0 8px; font-size:14px}
-    .card p{margin:0; color:var(--muted); line-height:1.7}
+    .card p{margin:0; color: var(--muted); line-height:1.85}
 
     .row{display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px}
+
     button{
       appearance:none;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.04);
-      color:var(--text);
+      border:1px solid var(--faint);
+      background: rgba(255,255,255,0.22);
+      color: var(--ink);
       padding: 10px 12px;
-      border-radius: 14px;
+      border-radius: 999px;
       cursor:pointer;
+      font-family: var(--sans);
     }
-    button:hover{background: rgba(255,255,255,.07)}
+    button:hover{background: rgba(255,255,255,0.35)}
+
     button.primary{
-      border-color: rgba(136,215,255,.35);
-      background: radial-gradient(120% 140% at 20% 20%, rgba(136,215,255,.22), rgba(183,162,255,.12), rgba(255,255,255,.03));
+      border-color: rgba(42,74,123,0.30);
+      background: rgba(42,74,123,0.10);
     }
 
-    .big{
-      font-size: 18px;
-      line-height: 1.7;
-      margin-top: 10px;
-    }
+    .big{font-size: 18px; line-height: 1.8; margin-top: 10px;}
 
     .pill{
       display:inline-flex;
@@ -113,28 +151,30 @@
       gap:8px;
       padding: 6px 10px;
       border-radius: 999px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.12);
-      color: rgba(255,255,255,.75);
+      border:1px solid rgba(24,23,22,0.10);
+      background: rgba(255,255,255,0.18);
+      color: rgba(24,23,22,0.70);
       font-size: 12px;
+      font-family: var(--mono);
     }
 
     .meter{
       height: 10px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(24,23,22,0.10);
+      background: rgba(255,255,255,0.18);
       overflow:hidden;
       margin-top: 10px;
     }
+
     .meter > div{
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg, var(--a), var(--b));
+      background: rgba(42,74,123,0.20);
       transition: width .35s ease;
     }
 
-    footer{margin-top: 16px; text-align:center; color: rgba(255,255,255,.55); font-size: 12px}
+    footer{margin-top: 16px; text-align:center; color: rgba(24,23,22,0.62); font-size: 12px}
 
     @media (prefers-reduced-motion: reduce){
       *{scroll-behavior:auto !important}
@@ -142,13 +182,13 @@
   </style>
 </head>
 <body>
-  <canvas id="bg" aria-hidden="true"></canvas>
+  <div class="paperGrain" aria-hidden="true"></div>
   <canvas id="fx" aria-hidden="true"></canvas>
 
   <div class="wrap">
     <header>
       <div class="title">
-        <div class="spark" aria-hidden="true">✦</div>
+        <div class="spark" aria-hidden="true">*</div>
         <div>
           <h1>给 <span class="accent">Starit</span> 的开心小宇宙</h1>
           <div class="sub">你不需要立刻变好一点点，也没关系；我们先让心情轻一点点。</div>
@@ -156,6 +196,7 @@
       </div>
 
       <nav class="nav" aria-label="页面导航">
+        <a href="index.html">主页</a>
         <a href="#breath">呼吸</a>
         <a href="#card">小卡片</a>
         <a href="#fireworks">烟花</a>
@@ -165,10 +206,7 @@
 
     <section class="hero">
       <h2>现在，先做一件简单的事：<span class="accent">把难过放轻一点</span></h2>
-      <p class="lead">
-        下面每个按钮都很短、很轻。你可以只点一个。
-        如果你愿意，也可以把这个页面当作你的“情绪工具箱”。
-      </p>
+      <p class="lead">下面每个按钮都很短、很轻。你可以只点一个。也可以把这个页面当作你的“情绪工具箱”。</p>
 
       <div class="grid">
         <div id="breath" class="card">
@@ -221,9 +259,7 @@
   </div>
 
   <script>
-    // ------------------------------
     // Uplifting cards
-    // ------------------------------
     const CARDS = [
       "你能在难过的时候还愿意求助，这本身就是很强的生命力。",
       "你不是‘不够好’，你只是‘太累了’。累了就该被照顾。",
@@ -261,18 +297,14 @@
       }
     });
 
-    // ------------------------------
     // Breath timer (30s, 4/6)
-    // ------------------------------
     const breathBtn = document.getElementById('breathBtn');
     const breathHint = document.getElementById('breathHint');
     const breathBar = document.getElementById('breathBar');
-
     let breathTimer = null;
 
     breathBtn.addEventListener('click', () => {
       if (breathTimer) return;
-
       const total = 30;
       let elapsed = 0;
       breathBtn.disabled = true;
@@ -300,14 +332,10 @@
 
       tick();
       breathTimer = setInterval(tick, 1000);
-
-      // Visual: a gentle pulse
       toast('开始：吸气 4 秒 → 呼气 6 秒');
     });
 
-    // ------------------------------
     // Tiny task chooser
-    // ------------------------------
     const tinyText = document.getElementById('tinyText');
     const tinyDone = document.getElementById('tinyDone');
     const tinyA = document.getElementById('tinyA');
@@ -334,76 +362,25 @@
       tinyDone.disabled = true;
     });
 
-    // ------------------------------
-    // Background stars + FX fireworks/confetti
-    // ------------------------------
-    const bg = document.getElementById('bg');
+    // FX particles
     const fx = document.getElementById('fx');
-    const bctx = bg.getContext('2d');
     const fctx = fx.getContext('2d');
     const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
-
     const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     function resize(){
       const w = window.innerWidth, h = window.innerHeight;
-      for (const c of [bg, fx]){
-        c.width = Math.floor(w * dpr);
-        c.height = Math.floor(h * dpr);
-        c.style.width = w + 'px';
-        c.style.height = h + 'px';
-      }
-      bctx.setTransform(dpr,0,0,dpr,0,0);
+      fx.width = Math.floor(w * dpr);
+      fx.height = Math.floor(h * dpr);
+      fx.style.width = w + 'px';
+      fx.style.height = h + 'px';
       fctx.setTransform(dpr,0,0,dpr,0,0);
-      initStars();
     }
     window.addEventListener('resize', resize, {passive:true});
+    resize();
 
-    let stars = [];
-    function initStars(){
-      const w = window.innerWidth, h = window.innerHeight;
-      const n = Math.min(420, Math.floor((w*h)/5000));
-      stars = Array.from({length:n}, () => ({
-        x: Math.random()*w,
-        y: Math.random()*h,
-        z: Math.random(),
-        r: .5 + Math.random()*1.7,
-        a: .18 + Math.random()*.82,
-        tw: .002 + Math.random()*.010,
-      }));
-    }
-
-    function drawSky(){
-      const w = window.innerWidth, h = window.innerHeight;
-      const g = bctx.createRadialGradient(w*0.30, h*0.20, 0, w*0.30, h*0.20, Math.max(w,h));
-      g.addColorStop(0, '#0b1030');
-      g.addColorStop(.55, '#050713');
-      g.addColorStop(1, '#02030a');
-      bctx.fillStyle = g;
-      bctx.fillRect(0,0,w,h);
-
-      const driftX = reduce ? 0 : Math.sin(Date.now()/9000) * 0.15;
-      const driftY = reduce ? 0 : Math.cos(Date.now()/11000) * 0.12;
-
-      for (const s of stars){
-        if (!reduce){
-          s.a += (Math.random() - .5) * s.tw;
-          s.a = Math.max(.14, Math.min(1, s.a));
-        }
-        const px = s.x + driftX*(1+s.z*2);
-        const py = s.y + driftY*(1+s.z*2);
-        bctx.beginPath();
-        bctx.arc(px, py, s.r*(.75+s.z), 0, Math.PI*2);
-        const cool = 215 + Math.floor(s.z*20);
-        bctx.fillStyle = `rgba(${cool},${cool+8},255,${s.a*(.45+s.z*.75)})`;
-        bctx.fill();
-      }
-    }
-
-    // FX particles
     let particles = [];
     function popConfetti(x, y, count){
-      const w = window.innerWidth, h = window.innerHeight;
       for (let i=0;i<count;i++){
         const angle = Math.random()*Math.PI*2;
         const speed = 2 + Math.random()*5.5;
@@ -414,26 +391,22 @@
           life: 0,
           max: 40 + Math.random()*30,
           size: 2 + Math.random()*3,
-          hue: (180 + Math.random()*120),
+          hue: 210 + Math.random()*30,
           spin: (Math.random()-.5)*.25,
           rot: Math.random()*Math.PI,
         });
       }
     }
 
-    function popFirework(x, y){
-      // a bit denser than confetti
-      popConfetti(x, y, 28);
-    }
+    function popFirework(x, y){ popConfetti(x, y, 28); }
 
     function stepFX(){
       const w = window.innerWidth, h = window.innerHeight;
       fctx.clearRect(0,0,w,h);
-
       particles = particles.filter(p => p.life < p.max);
       for (const p of particles){
         p.life += 1;
-        p.vy += 0.10; // gravity
+        p.vy += 0.10;
         p.x += p.vx;
         p.y += p.vy;
         p.rot += p.spin;
@@ -442,7 +415,7 @@
         fctx.save();
         fctx.translate(p.x, p.y);
         fctx.rotate(p.rot);
-        fctx.fillStyle = `hsla(${p.hue}, 90%, 70%, ${a})`;
+        fctx.fillStyle = `hsla(${p.hue}, 35%, 45%, ${a})`;
         fctx.fillRect(-p.size, -p.size/2, p.size*2, p.size);
         fctx.restore();
       }
@@ -454,10 +427,10 @@
     toastEl.style.cssText = `
       position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%);
       padding: 10px 12px; border-radius: 999px; z-index: 20;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.55);
-      color: rgba(255,255,255,.90);
-      font-size: 12px; backdrop-filter: blur(8px);
+      border: 1px solid rgba(24,23,22,.12);
+      background: rgba(245,240,232,0.85);
+      color: rgba(24,23,22,.90);
+      font-size: 12px; backdrop-filter: blur(6px);
       opacity: 0; transition: opacity .2s ease;
       pointer-events: none;
     `;
@@ -488,23 +461,14 @@
     });
 
     // Loop
-    resize();
-    let raf;
     function loop(){
-      drawSky();
       stepFX();
-      raf = requestAnimationFrame(loop);
+      if (!reduce) requestAnimationFrame(loop);
     }
 
-    if (reduce){
-      // draw once
-      drawSky();
-      stepFX();
-    }else{
-      loop();
-    }
+    if (!reduce) requestAnimationFrame(loop);
 
-    // Set a nice first card
+    // First card
     pickCard();
   </script>
 </body>
