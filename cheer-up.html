@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="一个小小的开心页面：呼吸、夸夸、放烟花、抽小卡片。" />
+  <title>给 Starit 的开心小宇宙</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#060814;
+      --panel: rgba(18, 22, 40, .62);
+      --border: rgba(255,255,255,.12);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.66);
+      --a:#88d7ff;
+      --b:#b7a2ff;
+      --shadow: 0 20px 80px rgba(0,0,0,.45);
+      --r: 18px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: "Noto Sans SC", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      color:var(--text);
+      background: var(--bg);
+      overflow-x:hidden;
+    }
+    canvas{position:fixed; inset:0; z-index:-1}
+
+    .wrap{width:min(980px, calc(100% - 32px)); margin:24px auto 60px;}
+
+    header{
+      border:1px solid var(--border);
+      border-radius: var(--r);
+      background: rgba(18,22,40,.42);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow);
+      padding: 18px 18px;
+      display:flex;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .title{display:flex; gap:12px; align-items:center}
+    .spark{
+      width:38px; height:38px;
+      display:grid; place-items:center;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background: radial-gradient(120% 120% at 30% 30%, rgba(136,215,255,.22), rgba(183,162,255,.10), rgba(0,0,0,0));
+    }
+    h1{margin:0; font-size:18px; letter-spacing:.2px}
+    .sub{margin:2px 0 0; font-size:12px; color:var(--muted)}
+
+    .nav{display:flex; gap:10px; flex-wrap:wrap}
+    .nav a{color:var(--muted); text-decoration:none; border:1px solid transparent; padding:8px 10px; border-radius: 14px}
+    .nav a:hover{color:var(--text); border-color:var(--border); background: rgba(255,255,255,.03)}
+
+    .hero{
+      margin-top:16px;
+      border:1px solid var(--border);
+      border-radius: var(--r);
+      background: linear-gradient(180deg, rgba(18,22,40,.68), rgba(18,22,40,.36));
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow);
+      padding: 28px 20px;
+    }
+    .hero h2{margin:0; font-size: clamp(24px, 4vw, 40px); line-height:1.08}
+    .accent{background: linear-gradient(90deg, var(--a), var(--b)); -webkit-background-clip:text; background-clip:text; color:transparent}
+    .lead{margin:12px 0 0; color:var(--muted); line-height:1.75}
+
+    .grid{display:grid; gap:12px; margin-top: 14px}
+    @media (min-width: 860px){ .grid{grid-template-columns: 1fr 1fr} }
+
+    .card{
+      border:1px solid rgba(255,255,255,.10);
+      border-radius: 16px;
+      background: rgba(0,0,0,.18);
+      padding: 14px;
+      min-height: 120px;
+    }
+    .card h3{margin:0 0 8px; font-size:14px}
+    .card p{margin:0; color:var(--muted); line-height:1.7}
+
+    .row{display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px}
+    button{
+      appearance:none;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      color:var(--text);
+      padding: 10px 12px;
+      border-radius: 14px;
+      cursor:pointer;
+    }
+    button:hover{background: rgba(255,255,255,.07)}
+    button.primary{
+      border-color: rgba(136,215,255,.35);
+      background: radial-gradient(120% 140% at 20% 20%, rgba(136,215,255,.22), rgba(183,162,255,.12), rgba(255,255,255,.03));
+    }
+
+    .big{
+      font-size: 18px;
+      line-height: 1.7;
+      margin-top: 10px;
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.12);
+      color: rgba(255,255,255,.75);
+      font-size: 12px;
+    }
+
+    .meter{
+      height: 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      overflow:hidden;
+      margin-top: 10px;
+    }
+    .meter > div{
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--a), var(--b));
+      transition: width .35s ease;
+    }
+
+    footer{margin-top: 16px; text-align:center; color: rgba(255,255,255,.55); font-size: 12px}
+
+    @media (prefers-reduced-motion: reduce){
+      *{scroll-behavior:auto !important}
+    }
+  </style>
+</head>
+<body>
+  <canvas id="bg" aria-hidden="true"></canvas>
+  <canvas id="fx" aria-hidden="true"></canvas>
+
+  <div class="wrap">
+    <header>
+      <div class="title">
+        <div class="spark" aria-hidden="true">✦</div>
+        <div>
+          <h1>给 <span class="accent">Starit</span> 的开心小宇宙</h1>
+          <div class="sub">你不需要立刻变好一点点，也没关系；我们先让心情轻一点点。</div>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="页面导航">
+        <a href="#breath">呼吸</a>
+        <a href="#card">小卡片</a>
+        <a href="#fireworks">烟花</a>
+        <a href="#tiny">小事</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <h2>现在，先做一件简单的事：<span class="accent">把难过放轻一点</span></h2>
+      <p class="lead">
+        下面每个按钮都很短、很轻。你可以只点一个。
+        如果你愿意，也可以把这个页面当作你的“情绪工具箱”。
+      </p>
+
+      <div class="grid">
+        <div id="breath" class="card">
+          <h3>1) 30 秒呼吸</h3>
+          <p>跟着节奏走：吸气 4 秒 → 呼气 6 秒。呼气比吸气长一点，会更稳。</p>
+          <div class="meter" aria-label="呼吸进度"><div id="breathBar"></div></div>
+          <div class="row">
+            <button class="primary" id="breathBtn">开始呼吸</button>
+            <span class="pill" id="breathHint">未开始</span>
+          </div>
+        </div>
+
+        <div id="card" class="card">
+          <h3>2) 抽一张“夸夸卡”</h3>
+          <p>这不是鸡汤，是提醒：你已经走了很远。</p>
+          <div class="big" id="cardText">点一下按钮，我会送你一句非常认真的夸夸。</div>
+          <div class="row">
+            <button class="primary" id="cardBtn">抽一张</button>
+            <button id="copyBtn">复制这句话</button>
+          </div>
+        </div>
+
+        <div id="fireworks" class="card">
+          <h3>3) 点一下，放烟花</h3>
+          <p>每次点击都会在你点击的位置放一束小烟花（纯前端，不会上传任何东西）。</p>
+          <div class="row">
+            <button class="primary" id="fwBtn">开启烟花模式</button>
+            <span class="pill" id="fwState">关闭</span>
+          </div>
+          <p class="lead" style="margin-top:10px">打开后，在页面任意位置点击。</p>
+        </div>
+
+        <div id="tiny" class="card">
+          <h3>4) 选一件“今天的小事”</h3>
+          <p>难过时不要强迫自己做大事。做小事也算在向前。</p>
+          <div class="row">
+            <button id="tinyA">喝一杯水</button>
+            <button id="tinyB">整理桌面 1 分钟</button>
+            <button id="tinyC">给朋友发一句“在吗”</button>
+          </div>
+          <div class="big" id="tinyText" style="margin-top:10px">你可以随便选一个，做完就回来按“完成”。</div>
+          <div class="row">
+            <button class="primary" id="tinyDone" disabled>完成</button>
+          </div>
+        </div>
+      </div>
+
+      <footer>如果你愿意，告诉我：你现在的难过更像“压力/失落/孤独/委屈/疲惫”里的哪一种？</footer>
+    </section>
+  </div>
+
+  <script>
+    // ------------------------------
+    // Uplifting cards
+    // ------------------------------
+    const CARDS = [
+      "你能在难过的时候还愿意求助，这本身就是很强的生命力。",
+      "你不是‘不够好’，你只是‘太累了’。累了就该被照顾。",
+      "你已经在做一件很难的事：继续往前走。你做到了。",
+      "你对自己的要求很高——这说明你在乎。现在，先对自己温柔一点。",
+      "你不是一个问题，你是一个正在经历困难的人。困难会过去。",
+      "就算今天只有 1% 的力气，也足够完成 1% 的小事。",
+      "你愿意把情绪说出来，说明你还在和世界保持连接。",
+      "你可能没看到：你其实一直在把生活撑住。",
+      "你值得被认真对待，也值得被好好喜欢。",
+      "今天你不需要赢，你只需要被允许慢一点。",
+    ];
+
+    const cardText = document.getElementById('cardText');
+    const cardBtn = document.getElementById('cardBtn');
+    const copyBtn = document.getElementById('copyBtn');
+
+    function pickCard(){
+      const s = CARDS[Math.floor(Math.random()*CARDS.length)];
+      cardText.textContent = s;
+      return s;
+    }
+
+    cardBtn.addEventListener('click', () => {
+      pickCard();
+      popConfetti(window.innerWidth * 0.62, window.innerHeight * 0.45, 14);
+    });
+
+    copyBtn.addEventListener('click', async () => {
+      try{
+        await navigator.clipboard.writeText(cardText.textContent);
+        toast('已复制');
+      }catch{
+        toast('复制失败（可能浏览器限制）');
+      }
+    });
+
+    // ------------------------------
+    // Breath timer (30s, 4/6)
+    // ------------------------------
+    const breathBtn = document.getElementById('breathBtn');
+    const breathHint = document.getElementById('breathHint');
+    const breathBar = document.getElementById('breathBar');
+
+    let breathTimer = null;
+
+    breathBtn.addEventListener('click', () => {
+      if (breathTimer) return;
+
+      const total = 30;
+      let elapsed = 0;
+      breathBtn.disabled = true;
+
+      function tick(){
+        elapsed += 1;
+        const phase = elapsed % 10; // 0..9
+        const label = (phase >= 0 && phase <= 3)
+          ? `吸气 ${4 - phase}s`
+          : `呼气 ${10 - phase}s`;
+
+        breathHint.textContent = label;
+        breathBar.style.width = `${Math.min(100, (elapsed/total)*100)}%`;
+
+        if (elapsed >= total){
+          clearInterval(breathTimer);
+          breathTimer = null;
+          breathHint.textContent = '完成。你做得很好。';
+          breathBtn.disabled = false;
+          popConfetti(window.innerWidth * 0.38, window.innerHeight * 0.45, 18);
+          toast('呼吸完成');
+          return;
+        }
+      }
+
+      tick();
+      breathTimer = setInterval(tick, 1000);
+
+      // Visual: a gentle pulse
+      toast('开始：吸气 4 秒 → 呼气 6 秒');
+    });
+
+    // ------------------------------
+    // Tiny task chooser
+    // ------------------------------
+    const tinyText = document.getElementById('tinyText');
+    const tinyDone = document.getElementById('tinyDone');
+    const tinyA = document.getElementById('tinyA');
+    const tinyB = document.getElementById('tinyB');
+    const tinyC = document.getElementById('tinyC');
+
+    let chosen = null;
+    function choose(label){
+      chosen = label;
+      tinyText.textContent = `好，就做这件：${label}。做完回来点“完成”。`;
+      tinyDone.disabled = false;
+    }
+
+    tinyA.addEventListener('click', () => choose('喝一杯水'));
+    tinyB.addEventListener('click', () => choose('整理桌面 1 分钟'));
+    tinyC.addEventListener('click', () => choose('给朋友发一句“在吗”'));
+
+    tinyDone.addEventListener('click', () => {
+      if (!chosen) return;
+      tinyText.textContent = `完成了：${chosen}。你刚刚把自己照顾了一下，这很了不起。`;
+      popConfetti(window.innerWidth * 0.62, window.innerHeight * 0.72, 22);
+      toast('完成！');
+      chosen = null;
+      tinyDone.disabled = true;
+    });
+
+    // ------------------------------
+    // Background stars + FX fireworks/confetti
+    // ------------------------------
+    const bg = document.getElementById('bg');
+    const fx = document.getElementById('fx');
+    const bctx = bg.getContext('2d');
+    const fctx = fx.getContext('2d');
+    const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function resize(){
+      const w = window.innerWidth, h = window.innerHeight;
+      for (const c of [bg, fx]){
+        c.width = Math.floor(w * dpr);
+        c.height = Math.floor(h * dpr);
+        c.style.width = w + 'px';
+        c.style.height = h + 'px';
+      }
+      bctx.setTransform(dpr,0,0,dpr,0,0);
+      fctx.setTransform(dpr,0,0,dpr,0,0);
+      initStars();
+    }
+    window.addEventListener('resize', resize, {passive:true});
+
+    let stars = [];
+    function initStars(){
+      const w = window.innerWidth, h = window.innerHeight;
+      const n = Math.min(420, Math.floor((w*h)/5000));
+      stars = Array.from({length:n}, () => ({
+        x: Math.random()*w,
+        y: Math.random()*h,
+        z: Math.random(),
+        r: .5 + Math.random()*1.7,
+        a: .18 + Math.random()*.82,
+        tw: .002 + Math.random()*.010,
+      }));
+    }
+
+    function drawSky(){
+      const w = window.innerWidth, h = window.innerHeight;
+      const g = bctx.createRadialGradient(w*0.30, h*0.20, 0, w*0.30, h*0.20, Math.max(w,h));
+      g.addColorStop(0, '#0b1030');
+      g.addColorStop(.55, '#050713');
+      g.addColorStop(1, '#02030a');
+      bctx.fillStyle = g;
+      bctx.fillRect(0,0,w,h);
+
+      const driftX = reduce ? 0 : Math.sin(Date.now()/9000) * 0.15;
+      const driftY = reduce ? 0 : Math.cos(Date.now()/11000) * 0.12;
+
+      for (const s of stars){
+        if (!reduce){
+          s.a += (Math.random() - .5) * s.tw;
+          s.a = Math.max(.14, Math.min(1, s.a));
+        }
+        const px = s.x + driftX*(1+s.z*2);
+        const py = s.y + driftY*(1+s.z*2);
+        bctx.beginPath();
+        bctx.arc(px, py, s.r*(.75+s.z), 0, Math.PI*2);
+        const cool = 215 + Math.floor(s.z*20);
+        bctx.fillStyle = `rgba(${cool},${cool+8},255,${s.a*(.45+s.z*.75)})`;
+        bctx.fill();
+      }
+    }
+
+    // FX particles
+    let particles = [];
+    function popConfetti(x, y, count){
+      const w = window.innerWidth, h = window.innerHeight;
+      for (let i=0;i<count;i++){
+        const angle = Math.random()*Math.PI*2;
+        const speed = 2 + Math.random()*5.5;
+        particles.push({
+          x, y,
+          vx: Math.cos(angle)*speed,
+          vy: Math.sin(angle)*speed - (2.5+Math.random()*2),
+          life: 0,
+          max: 40 + Math.random()*30,
+          size: 2 + Math.random()*3,
+          hue: (180 + Math.random()*120),
+          spin: (Math.random()-.5)*.25,
+          rot: Math.random()*Math.PI,
+        });
+      }
+    }
+
+    function popFirework(x, y){
+      // a bit denser than confetti
+      popConfetti(x, y, 28);
+    }
+
+    function stepFX(){
+      const w = window.innerWidth, h = window.innerHeight;
+      fctx.clearRect(0,0,w,h);
+
+      particles = particles.filter(p => p.life < p.max);
+      for (const p of particles){
+        p.life += 1;
+        p.vy += 0.10; // gravity
+        p.x += p.vx;
+        p.y += p.vy;
+        p.rot += p.spin;
+
+        const a = 1 - (p.life / p.max);
+        fctx.save();
+        fctx.translate(p.x, p.y);
+        fctx.rotate(p.rot);
+        fctx.fillStyle = `hsla(${p.hue}, 90%, 70%, ${a})`;
+        fctx.fillRect(-p.size, -p.size/2, p.size*2, p.size);
+        fctx.restore();
+      }
+    }
+
+    // Toast
+    let toastTimer = null;
+    const toastEl = document.createElement('div');
+    toastEl.style.cssText = `
+      position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%);
+      padding: 10px 12px; border-radius: 999px; z-index: 20;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.55);
+      color: rgba(255,255,255,.90);
+      font-size: 12px; backdrop-filter: blur(8px);
+      opacity: 0; transition: opacity .2s ease;
+      pointer-events: none;
+    `;
+    document.body.appendChild(toastEl);
+
+    function toast(msg){
+      toastEl.textContent = msg;
+      toastEl.style.opacity = '1';
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toastEl.style.opacity = '0', 1400);
+    }
+
+    // Fireworks mode
+    const fwBtn = document.getElementById('fwBtn');
+    const fwState = document.getElementById('fwState');
+    let fwOn = false;
+
+    fwBtn.addEventListener('click', () => {
+      fwOn = !fwOn;
+      fwState.textContent = fwOn ? '开启' : '关闭';
+      toast(fwOn ? '烟花模式已开启：点任意位置' : '烟花模式已关闭');
+      if (fwOn) popFirework(window.innerWidth*0.5, window.innerHeight*0.5);
+    });
+
+    window.addEventListener('click', (e) => {
+      if (!fwOn) return;
+      popFirework(e.clientX, e.clientY);
+    });
+
+    // Loop
+    resize();
+    let raf;
+    function loop(){
+      drawSky();
+      stepFX();
+      raf = requestAnimationFrame(loop);
+    }
+
+    if (reduce){
+      // draw once
+      drawSky();
+      stepFX();
+    }else{
+      loop();
+    }
+
+    // Set a nice first card
+    pickCard();
+  </script>
+</body>
+</html>
