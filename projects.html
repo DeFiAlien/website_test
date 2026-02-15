@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Projects — Starit" />
+  <title>Projects · Starit</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <canvas id="starfield" aria-hidden="true"></canvas>
+  <div class="noise" aria-hidden="true"></div>
+
+  <div class="page" data-lang="en">
+    <header class="topbar">
+      <div class="brand">
+        <div class="mark" aria-hidden="true">*</div>
+        <div>
+          <div class="name">Starit</div>
+          <div class="tag" data-i18n="tagline">Look up, build down.</div>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:10px; align-items:center; justify-content:flex-end; flex-wrap:wrap">
+        <nav class="nav" aria-label="Primary">
+          <a href="index.html" data-i18n="nav.home">Home</a>
+          <a href="#list" data-i18n="nav.projects">Projects</a>
+          <a href="cheer-up.html" data-i18n="nav.cheer">Cheer up</a>
+        </nav>
+
+        <div class="lang" aria-label="Language">
+          <button id="langEN" type="button" aria-pressed="true">EN</button>
+          <button id="langZH" type="button" aria-pressed="false">中文</button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero">
+        <div class="heroGrid">
+          <div>
+            <h1 class="hTitle"><span data-i18n="title">Projects</span><span class="accent">.</span></h1>
+            <p class="lead" data-i18n="lead">
+              A small collection. Keep it sharp: what it is, what it does, where to try it.
+            </p>
+            <div class="ctaRow">
+              <a class="btn primary" href="https://github.com/DeFiAlien" target="_blank" rel="noreferrer">GitHub</a>
+              <a class="btn" href="index.html" data-i18n="cta.back">Back</a>
+            </div>
+          </div>
+          <div>
+            <div class="card" style="min-height: 100%">
+              <h3 class="mono" data-i18n="side.title">Rule</h3>
+              <p data-i18n="side.body">If a project can’t be explained in two lines, it’s not ready for the homepage.</p>
+              <div class="meta" style="margin-top:12px">
+                <span data-i18n="side.meta">Curate. Iterate. Ship.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="list" class="panel">
+        <div class="panelHeader">
+          <h2>List</h2>
+          <div class="note" data-i18n="note">Replace placeholders with your real work.</div>
+        </div>
+
+        <div class="grid three">
+          <article class="card">
+            <h3>website_test</h3>
+            <p data-i18n="p1">A starry minimal personal site + a cheer-up page.</p>
+            <div class="meta">
+              <a href="https://github.com/DeFiAlien/website_test" target="_blank" rel="noreferrer">Repo</a>
+              <a href="index.html" data-i18n="open">Open</a>
+            </div>
+          </article>
+
+          <article class="card">
+            <h3>Project Two</h3>
+            <p data-i18n="p2">One-line description goes here.</p>
+            <div class="meta">
+              <a href="#" aria-disabled="true">Link</a>
+              <span>·</span>
+              <span class="mono">WIP</span>
+            </div>
+          </article>
+
+          <article class="card">
+            <h3>Project Three</h3>
+            <p data-i18n="p3">Another one-liner. Keep it honest.</p>
+            <div class="meta">
+              <a href="#" aria-disabled="true">Link</a>
+              <span>·</span>
+              <span class="mono">WIP</span>
+            </div>
+          </article>
+        </div>
+
+        <footer class="footer">
+          <div>© <span id="year"></span> Starit</div>
+          <div class="mono">Projects</div>
+        </footer>
+      </section>
+    </main>
+  </div>
+
+  <script src="js/starfield.js" defer></script>
+  <script>
+    document.getElementById('year').textContent = String(new Date().getFullYear());
+
+    const dict = {
+      en: {
+        'tagline': 'Look up, build down.',
+        'nav.home': 'Home',
+        'nav.projects': 'Projects',
+        'nav.cheer': 'Cheer up',
+        'title': 'Projects',
+        'lead': 'A small collection. Keep it sharp: what it is, what it does, where to try it.',
+        'cta.back': 'Back',
+        'side.title': 'Rule',
+        'side.body': 'If a project can\'t be explained in two lines, it\'s not ready for the homepage.',
+        'side.meta': 'Curate. Iterate. Ship.',
+        'note': 'Replace placeholders with your real work.',
+        'p1': 'A starry minimal personal site + a cheer-up page.',
+        'p2': 'One-line description goes here.',
+        'p3': 'Another one-liner. Keep it honest.',
+        'open': 'Open'
+      },
+      zh: {
+        'tagline': '仰望星空，搭建现实。',
+        'nav.home': '主页',
+        'nav.projects': '项目',
+        'nav.cheer': '开心一下',
+        'title': '项目',
+        'lead': '一份小小的精选：它是什么、解决什么、在哪里体验。',
+        'cta.back': '返回',
+        'side.title': '原则',
+        'side.body': '如果一个项目不能用两行说清楚，它还不该出现在主页上。',
+        'side.meta': '精选 · 迭代 · 交付',
+        'note': '把占位内容换成你的真实作品。',
+        'p1': '星空极简个人站 + 开心页面。',
+        'p2': '在这里写一句话简介。',
+        'p3': '再写一个一句话简介，诚实一点就好。',
+        'open': '打开'
+      }
+    };
+
+    function applyLang(lang){
+      document.querySelector('.page').setAttribute('data-lang', lang);
+      document.getElementById('langEN').setAttribute('aria-pressed', String(lang==='en'));
+      document.getElementById('langZH').setAttribute('aria-pressed', String(lang==='zh'));
+      for (const el of document.querySelectorAll('[data-i18n]')){
+        const key = el.getAttribute('data-i18n');
+        const val = dict[lang][key];
+        if (typeof val === 'string') el.textContent = val;
+      }
+      try{ localStorage.setItem('lang', lang); }catch{}
+    }
+
+    const saved = (() => { try{ return localStorage.getItem('lang'); }catch{ return null; }})();
+    applyLang(saved === 'zh' ? 'zh' : 'en');
+
+    document.getElementById('langEN').addEventListener('click', () => applyLang('en'));
+    document.getElementById('langZH').addEventListener('click', () => applyLang('zh'));
+  </script>
+</body>
+</html>

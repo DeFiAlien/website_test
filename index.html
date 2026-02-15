@@ -1,133 +1,228 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Starit 的个人主页：星空背景、项目与联系方式。" />
-
-  <title>Starit · Starry Home</title>
-
-  <!-- Open Graph (optional) -->
-  <meta property="og:title" content="Starit · Starry Home" />
-  <meta property="og:description" content="星空主题个人主页：关于我、项目与联系方式。" />
-  <meta property="og:type" content="website" />
-
+  <meta name="description" content="Starit — modern minimal, experimental, bilingual personal site." />
+  <title>Starit</title>
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <a class="skip" href="#main">跳到正文</a>
-
+  <a class="skip" href="#main">Skip to content</a>
   <canvas id="starfield" aria-hidden="true"></canvas>
+  <div class="noise" aria-hidden="true"></div>
 
-  <div class="page">
+  <div class="page" data-lang="en">
     <header class="topbar">
       <div class="brand">
-        <div class="mark" aria-hidden="true">✦</div>
-        <div class="brandText">
+        <div class="mark" aria-hidden="true">*</div>
+        <div>
           <div class="name">Starit</div>
-          <div class="tagline">仰望星空，脚踏实地</div>
+          <div class="tag" data-i18n="tagline">Look up, build down.</div>
         </div>
       </div>
 
-      <nav class="nav" aria-label="页面导航">
-        <a href="#about">关于</a>
-        <a href="#projects">项目</a>
-        <a href="#contact">联系</a>
-      </nav>
+      <div style="display:flex; gap:10px; align-items:center; justify-content:flex-end; flex-wrap:wrap">
+        <nav class="nav" aria-label="Primary">
+          <a href="#about" data-i18n="nav.about">About</a>
+          <a href="projects.html" data-i18n="nav.projects">Projects</a>
+          <a href="cheer-up.html" data-i18n="nav.cheer">Cheer up</a>
+          <a href="#contact" data-i18n="nav.contact">Contact</a>
+        </nav>
+
+        <div class="lang" aria-label="Language">
+          <button id="langEN" type="button" aria-pressed="true">EN</button>
+          <button id="langZH" type="button" aria-pressed="false">中文</button>
+        </div>
+      </div>
     </header>
 
     <main id="main" class="main">
-      <section class="hero" aria-label="封面">
-        <h1>你好，我是 <span class="accent">Starit</span></h1>
-        <p class="lead">
-          这是一个简洁的星空主题个人主页。你可以在这里放上你的简介、项目链接，以及任何你想分享的内容。
-        </p>
-        <div class="ctaRow">
-          <a class="btn primary" href="#projects">查看项目</a>
-          <a class="btn" href="cheer-up.html">来一点开心</a>
-          <a class="btn" href="#contact">联系我</a>
+      <section class="hero">
+        <div class="heroGrid">
+          <div>
+            <h1 class="hTitle">
+              <span data-i18n="hero.line1">A small</span>
+              <span class="accent" data-i18n="hero.line2">cosmic</span>
+              <span data-i18n="hero.line3">studio.</span>
+            </h1>
+
+            <p class="lead" data-i18n="hero.lead">
+              Modern minimal, slightly experimental. A place to show work, leave a trace, and keep moving.
+            </p>
+
+            <div class="kicker">
+              <span class="pill">Web</span>
+              <span class="pill">AI</span>
+              <span class="pill">DeFi</span>
+              <span class="pill mono" data-i18n="hero.location">UTC+8</span>
+            </div>
+
+            <div class="ctaRow">
+              <a class="btn primary" href="projects.html" data-i18n="cta.projects">View projects</a>
+              <a class="btn" href="#contact" data-i18n="cta.contact">Contact</a>
+            </div>
+          </div>
+
+          <div>
+            <div class="card" style="min-height: 100%">
+              <h3 class="mono" data-i18n="side.title">Now</h3>
+              <p data-i18n="side.body">
+                Building tools that reduce friction: clean interfaces, reliable pipelines, small automations.
+              </p>
+              <div class="meta" style="margin-top:12px">
+                <span data-i18n="side.meta1">Minimal, but not empty.</span>
+                <span>·</span>
+                <span data-i18n="side.meta2">Experimental, but usable.</span>
+              </div>
+            </div>
+          </div>
         </div>
-        <p class="hint">提示：把下面的文字替换成你的真实信息即可。</p>
       </section>
 
       <section id="about" class="panel">
-        <h2>关于我</h2>
+        <div class="panelHeader">
+          <h2>About</h2>
+          <div class="note" data-i18n="about.note">Replace the copy with your real story.</div>
+        </div>
+
         <div class="grid two">
           <div class="card">
-            <h3>一句话介绍</h3>
-            <p>
-              我关注 <strong>Web / AI / DeFi</strong> 方向，喜欢把复杂问题拆解成可交付的系统。
-            </p>
+            <h3 data-i18n="about.card1.title">One-liner</h3>
+            <p data-i18n="about.card1.body">I like turning messy problems into shippable systems.</p>
           </div>
           <div class="card">
-            <h3>正在做什么</h3>
+            <h3 data-i18n="about.card2.title">Focus</h3>
             <ul class="list">
-              <li>搭建自己的工具链与自动化助手</li>
-              <li>维护一些开源项目与实验性 Demo</li>
-              <li>持续学习：工程化、产品化、可靠性</li>
+              <li data-i18n="about.card2.li1">Engineering for clarity</li>
+              <li data-i18n="about.card2.li2">Automation that sticks</li>
+              <li data-i18n="about.card2.li3">Tasteful interfaces</li>
             </ul>
           </div>
         </div>
       </section>
 
-      <section id="projects" class="panel">
-        <h2>项目</h2>
-        <div class="grid three">
-          <article class="card">
-            <h3>Starry Site</h3>
-            <p>这个星空主页模板本身。简洁、响应式、支持低动态模式。</p>
-            <div class="meta">
-              <a class="link" href="https://github.com/DeFiAlien/website_test" target="_blank" rel="noreferrer">GitHub Repo</a>
-            </div>
-          </article>
-
-          <article class="card">
-            <h3>Project Two</h3>
-            <p>在这里放你的第二个项目：一句话说明它解决什么问题。</p>
-            <div class="meta">
-              <a class="link" href="#" aria-disabled="true">Link</a>
-            </div>
-          </article>
-
-          <article class="card">
-            <h3>Project Three</h3>
-            <p>第三个项目占位。你也可以把这里改成经历、技能栈或博客入口。</p>
-            <div class="meta">
-              <a class="link" href="#" aria-disabled="true">Link</a>
-            </div>
-          </article>
+      <section class="panel" id="contact">
+        <div class="panelHeader">
+          <h2>Contact</h2>
+          <div class="note" data-i18n="contact.note">Public links only.</div>
         </div>
-      </section>
 
-      <section id="contact" class="panel">
-        <h2>联系</h2>
         <div class="grid two">
           <div class="card">
-            <h3>邮箱</h3>
+            <h3 data-i18n="contact.email">Email</h3>
             <p>
-              <a class="link" href="mailto:defi_aline@example.com">defi_aline@example.com</a>
-              <span class="muted">（把这个改成你的真实邮箱）</span>
+              <a href="mailto:defi_aline@example.com">defi_aline@example.com</a>
+              <span class="mono" style="opacity:.65">(placeholder)</span>
             </p>
           </div>
           <div class="card">
-            <h3>其他</h3>
-            <ul class="list">
-              <li>GitHub：<a class="link" href="https://github.com/DeFiAlien" target="_blank" rel="noreferrer">@DeFiAlien</a></li>
-              <li>Telegram：<span class="muted">@Starit2023</span></li>
-            </ul>
+            <h3 data-i18n="contact.links">Links</h3>
+            <div class="meta">
+              <a href="https://github.com/DeFiAlien" target="_blank" rel="noreferrer">GitHub</a>
+              <a href="https://github.com/DeFiAlien/website_test" target="_blank" rel="noreferrer">Repo</a>
+              <a href="cheer-up.html" data-i18n="contact.cheer">Cheer-up page</a>
+            </div>
+            <p style="margin-top:10px" class="mono" data-i18n="contact.tip">Tip: add your Telegram / X / blog here.</p>
           </div>
         </div>
-      </section>
 
-      <footer class="footer">
-        <div>© <span id="year"></span> Starit · Built with HTML/CSS/Canvas</div>
-      </footer>
+        <footer class="footer">
+          <div>© <span id="year"></span> Starit</div>
+          <div class="mono">
+            <span data-i18n="footer.made">Made with</span> HTML/CSS/Canvas
+          </div>
+        </footer>
+      </section>
     </main>
   </div>
 
   <script src="js/starfield.js" defer></script>
   <script>
     document.getElementById('year').textContent = String(new Date().getFullYear());
+
+    const dict = {
+      en: {
+        'tagline': 'Look up, build down.',
+        'nav.about': 'About',
+        'nav.projects': 'Projects',
+        'nav.cheer': 'Cheer up',
+        'nav.contact': 'Contact',
+        'hero.line1': 'A small',
+        'hero.line2': 'cosmic',
+        'hero.line3': 'studio.',
+        'hero.lead': 'Modern minimal, slightly experimental. A place to show work, leave a trace, and keep moving.',
+        'hero.location': 'UTC+8',
+        'cta.projects': 'View projects',
+        'cta.contact': 'Contact',
+        'side.title': 'Now',
+        'side.body': 'Building tools that reduce friction: clean interfaces, reliable pipelines, small automations.',
+        'side.meta1': 'Minimal, but not empty.',
+        'side.meta2': 'Experimental, but usable.',
+        'about.note': 'Replace the copy with your real story.',
+        'about.card1.title': 'One-liner',
+        'about.card1.body': 'I like turning messy problems into shippable systems.',
+        'about.card2.title': 'Focus',
+        'about.card2.li1': 'Engineering for clarity',
+        'about.card2.li2': 'Automation that sticks',
+        'about.card2.li3': 'Tasteful interfaces',
+        'contact.note': 'Public links only.',
+        'contact.email': 'Email',
+        'contact.links': 'Links',
+        'contact.cheer': 'Cheer-up page',
+        'contact.tip': 'Tip: add your Telegram / X / blog here.',
+        'footer.made': 'Made with'
+      },
+      zh: {
+        'tagline': '仰望星空，搭建现实。',
+        'nav.about': '关于',
+        'nav.projects': '项目',
+        'nav.cheer': '开心一下',
+        'nav.contact': '联系',
+        'hero.line1': '一个小小的',
+        'hero.line2': '宇宙',
+        'hero.line3': '工作室。',
+        'hero.lead': '现代极简，带一点实验性。用来展示作品、留下痕迹、继续向前。',
+        'hero.location': 'UTC+8',
+        'cta.projects': '看看项目',
+        'cta.contact': '联系我',
+        'side.title': '此刻',
+        'side.body': '在做一些降低摩擦的工具：干净的界面、可靠的流程、小而稳定的自动化。',
+        'side.meta1': '极简，但不空洞。',
+        'side.meta2': '实验，但可用。',
+        'about.note': '把这些文案换成你的真实经历就行。',
+        'about.card1.title': '一句话',
+        'about.card1.body': '我喜欢把混乱的问题拆成可交付的系统。',
+        'about.card2.title': '关注点',
+        'about.card2.li1': '为清晰而工程化',
+        'about.card2.li2': '能长期运行的自动化',
+        'about.card2.li3': '有品味的界面',
+        'contact.note': '只放公开信息。',
+        'contact.email': '邮箱',
+        'contact.links': '链接',
+        'contact.cheer': '开心页面',
+        'contact.tip': '提示：把 Telegram / X / 博客等加在这里。',
+        'footer.made': '使用'
+      }
+    };
+
+    function applyLang(lang){
+      document.querySelector('.page').setAttribute('data-lang', lang);
+      document.getElementById('langEN').setAttribute('aria-pressed', String(lang==='en'));
+      document.getElementById('langZH').setAttribute('aria-pressed', String(lang==='zh'));
+      for (const el of document.querySelectorAll('[data-i18n]')){
+        const key = el.getAttribute('data-i18n');
+        const val = dict[lang][key];
+        if (typeof val === 'string') el.textContent = val;
+      }
+      try{ localStorage.setItem('lang', lang); }catch{}
+    }
+
+    const saved = (() => { try{ return localStorage.getItem('lang'); }catch{ return null; }})();
+    applyLang(saved === 'zh' ? 'zh' : 'en');
+
+    document.getElementById('langEN').addEventListener('click', () => applyLang('en'));
+    document.getElementById('langZH').addEventListener('click', () => applyLang('zh'));
   </script>
 </body>
 </html>

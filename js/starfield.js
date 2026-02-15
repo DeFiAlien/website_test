@@ -23,68 +23,70 @@
   window.addEventListener('resize', resize, { passive: true });
   resize();
 
-  // Star model: position + depth gives subtle parallax drift.
-  const STAR_COUNT = Math.min(420, Math.floor((w * h) / 4500));
+  // Subtle starfield: fewer stars, less contrast. Designed to sit behind typography.
+  const STAR_COUNT = Math.min(320, Math.floor((w * h) / 6500));
   const stars = Array.from({ length: STAR_COUNT }, () => ({
     x: Math.random() * w,
     y: Math.random() * h,
-    z: Math.random(),              // 0..1 depth
-    r: 0.6 + Math.random() * 1.6,
-    a: 0.25 + Math.random() * 0.75,
-    tw: 0.002 + Math.random() * 0.008,
+    z: Math.random(),
+    r: 0.5 + Math.random() * 1.5,
+    a: 0.10 + Math.random() * 0.55,
+    tw: 0.0015 + Math.random() * 0.006,
   }));
 
   let t = 0;
 
   function drawBackground() {
-    // A deep sky gradient (slightly bluish)
-    const g = ctx.createRadialGradient(w * 0.3, h * 0.2, 0, w * 0.3, h * 0.2, Math.max(w, h));
-    g.addColorStop(0, '#070A14');
-    g.addColorStop(0.55, '#04050B');
-    g.addColorStop(1, '#020308');
+    const g = ctx.createRadialGradient(w * 0.28, h * 0.18, 0, w * 0.28, h * 0.18, Math.max(w, h));
+    g.addColorStop(0, '#0A0B14');
+    g.addColorStop(0.55, '#06070C');
+    g.addColorStop(1, '#04040A');
     ctx.fillStyle = g;
     ctx.fillRect(0, 0, w, h);
+
+    // A faint nebula wash
+    ctx.globalCompositeOperation = 'screen';
+    ctx.fillStyle = 'rgba(155,231,255,0.03)';
+    ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = 'rgba(199,167,255,0.02)';
+    ctx.fillRect(0, 0, w, h);
+    ctx.globalCompositeOperation = 'source-over';
   }
 
   function frame() {
     t += 1;
-
     drawBackground();
 
-    // Gentle drift (disabled if reduced motion)
-    const driftX = prefersReducedMotion ? 0 : Math.sin(t / 900) * 0.12;
-    const driftY = prefersReducedMotion ? 0 : Math.cos(t / 1100) * 0.10;
+    const driftX = prefersReducedMotion ? 0 : Math.sin(t / 1200) * 0.10;
+    const driftY = prefersReducedMotion ? 0 : Math.cos(t / 1500) * 0.08;
 
     for (const s of stars) {
-      // Twinkle
       if (!prefersReducedMotion) {
         s.a += (Math.random() - 0.5) * s.tw;
-        if (s.a < 0.15) s.a = 0.15;
-        if (s.a > 1) s.a = 1;
+        if (s.a < 0.05) s.a = 0.05;
+        if (s.a > 0.72) s.a = 0.72;
       }
 
       const px = s.x + driftX * (1 + s.z * 2);
       const py = s.y + driftY * (1 + s.z * 2);
 
       ctx.beginPath();
-      ctx.arc(px, py, s.r * (0.75 + s.z), 0, Math.PI * 2);
+      ctx.arc(px, py, s.r * (0.70 + s.z), 0, Math.PI * 2);
 
-      // Slight color variance for depth
-      const cool = 210 + Math.floor(s.z * 25); // bluish tint in deeper layer
-      ctx.fillStyle = `rgba(${cool}, ${cool + 8}, 255, ${s.a * (0.5 + s.z * 0.7)})`;
+      const cool = 215 + Math.floor(s.z * 16);
+      ctx.fillStyle = `rgba(${cool}, ${cool + 10}, 255, ${s.a * (0.35 + s.z * 0.65)})`;
       ctx.fill();
     }
 
     if (!prefersReducedMotion) requestAnimationFrame(frame);
   }
 
-  // If reduced motion, draw once and stop.
   if (prefersReducedMotion) {
     drawBackground();
     for (const s of stars) {
       ctx.beginPath();
       ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(235, 242, 255, ${0.35 + s.z * 0.45})`;
+      ctx.fillStyle = `rgba(235, 242, 255, ${0.14 + s.z * 0.26})`;
       ctx.fill();
     }
   } else {
